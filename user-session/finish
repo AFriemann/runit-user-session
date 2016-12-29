@@ -1,0 +1,5 @@
+#!/bin/sh
+
+SVUSER=$USER # TODO change me!
+
+cgm gettasksrecursive pids "$SVUSER" | xargs kill

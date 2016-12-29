@@ -1,0 +1,10 @@
+#!/bin/sh
+
+SVUSER=$USER # TODO change me!
+
+cgm create all "$SVUSER"
+cgm removeonempty all "$SVUSER"
+cgm setvalue pids "$SVUSER" pids.max 50
+
+exec 2>&1
+exec cgexec -g "*:${SVUSER}" --sticky chpst -u "$SVUSER" -P runsvdir -P /home/"$SVUSER"/.local/service

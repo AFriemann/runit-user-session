@@ -1,0 +1,4 @@
+#!/bin/sh
+
+exec 2>&1
+exec aria2c --enable-rpc=true --disable-ipv6 --check-certificate=false

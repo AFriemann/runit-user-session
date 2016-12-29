@@ -5,7 +5,12 @@ This service will start a runsvdir process for a given user that will manage run
 
     $HOME/.local/service
 
-to control the services, use the provided usv script or add a function to your shell rc::
+Enable and start the service as usual::
+
+    $ sv start user-session
+
+This will automatically bring up all user services.
+To control the services, use the provided usv script or add a function to your shell rc::
 
     usv () {
         SVDIR=~/.local/service sv

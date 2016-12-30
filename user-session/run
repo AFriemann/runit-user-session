@@ -1,6 +1,9 @@
 #!/bin/sh
 
-SVUSER=$USER # TODO change me!
+SVNAME="$(realpath $0 | cut -d/ -f4)"
+SVUSER=${SVNAME##*.}
+
+who -u | grep -q "^$SVUSER" || exit 1
 
 cgm create all "$SVUSER"
 cgm removeonempty all "$SVUSER"

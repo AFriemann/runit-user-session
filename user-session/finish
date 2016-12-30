@@ -1,5 +1,6 @@
 #!/bin/sh
 
-SVUSER=$USER # TODO change me!
+SVNAME="$(basename $0)"
+SVUSER="${SVNAME##*.}"
 
 cgm gettasksrecursive pids "$SVUSER" | xargs kill

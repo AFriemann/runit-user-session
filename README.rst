@@ -5,11 +5,15 @@ This service will start a runsvdir process for a given user that will manage run
 
     $HOME/.local/service
 
-Enable and start the service as usual::
+user-sessions
+-------------
 
-    $ sv start user-session
+create a user session service::
 
-This will automatically bring up all user services.
+    $ cp -r user-session /etc/sv/user."$USER"
+    $ ln -s /etc/sv/user."$USER" /var/service/user."$USER"
+
+and services in *~/.local/service*. Runit should now automatically run all services.
 To control the services, use the provided usv script or add a function to your shell rc::
 
     usv () {
@@ -38,4 +42,12 @@ case the user-session is killed::
     $ ps aux | grep aria2c
     admin  14458  0.0  0.0  10756  2192 pts/6    S+   00:12   0:00 grep aria2c
 
+user-session-manager
+--------------------
+
+The user-session-manager service will automatically create/remove user-sessions for logged in users::
+
+    $ cp -r user-session /etc/sv/user-session
+    $ cp -r user-session-manager /etc/sv/user-session-manager
+    $ ln -s /etc/sv/user-session-manager /var/service/user-session-manager
 

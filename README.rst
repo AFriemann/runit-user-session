@@ -5,6 +5,11 @@ This service will start a runsvdir process for a given user that will manage run
 
     $HOME/.local/service
 
+requirements
+------------
+
+* libcgroup-utils - The session uses cgroups to limit available pids.
+
 user-sessions
 -------------
 
@@ -17,7 +22,7 @@ and services in *~/.local/service*. Runit should now automatically run all servi
 To control the services, use the provided usv script or add a function to your shell rc::
 
     usv () {
-        SVDIR=~/.local/service sv
+        SVDIR=~/.local/service sv $@
     }
 
 now run (assuming you have the user-session running)::
@@ -29,8 +34,7 @@ now run (assuming you have the user-session running)::
     $ usv stop aria2c
     ok: down: aria2c: 1s, normally up
 
-the user-session is run in a cgroup, currently with max PIDs of 50. The cgroup is also used to kill child processes in
-case the user-session is killed::
+Stopping the user-session should also stop all child services::
 
     $ usv status aria2c
     ok: run: aria2c: (pid 12237) 1061s
@@ -41,13 +45,4 @@ case the user-session is killed::
     ok: down: user-session: 0s, normally up
     $ ps aux | grep aria2c
     admin  14458  0.0  0.0  10756  2192 pts/6    S+   00:12   0:00 grep aria2c
-
-user-session-manager
---------------------
-
-The user-session-manager service will automatically create/remove user-sessions for logged in users::
-
-    $ cp -r user-session /etc/sv/user-session
-    $ cp -r user-session-manager /etc/sv/user-session-manager
-    $ ln -s /etc/sv/user-session-manager /var/service/user-session-manager
 

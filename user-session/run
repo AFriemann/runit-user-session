@@ -1,13 +1,15 @@
 #!/bin/sh
 
 SVNAME="$(realpath $0 | cut -d/ -f4)"
-SVUSER=${SVNAME##*.}
+SVUSER="${SVNAME##*.}"
+SVHOME="$(eval "echo ~$SVUSER")/.local/service"
 
-who -u | grep -q "^$SVUSER" || exit 1
+who | grep -q "^${SVUSER}" || exit 1
+[ -d "$SVHOME" ] || exit 1
 
-cgm create all "$SVUSER"
-cgm removeonempty all "$SVUSER"
-cgm setvalue pids "$SVUSER" pids.max 50
+CGROUP="users/${SVUSER}/runit"
 
-exec 2>&1
-exec cgexec -g "*:${SVUSER}" --sticky chpst -u "$SVUSER" -P runsvdir -P /home/"$SVUSER"/.local/service
+cgcreate -g "pids:$CGROUP"
+cgset -r pids.max=100 "$CGROUP"
+
+exec cgexec -g "pids:$CGROUP" --sticky -- chpst -u "$SVUSER" runsvdir "$SVHOME"

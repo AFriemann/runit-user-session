@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SVNAME="$(basename $0)"
+SVNAME="$(realpath $0 | cut -d/ -f4)"
 SVUSER="${SVNAME##*.}"
 
-cgm gettasksrecursive pids "$SVUSER" | xargs kill
+cgdelete -g "pids:users/${SVUSER}/runit"
